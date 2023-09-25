@@ -1,5 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "cpu.h"
 #include "dram.h"
+#include "opcode.h"
 
 void cpu_init(CPU *cpu)
 {
@@ -91,6 +97,72 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     int funct7 = (inst >> 25) & 0x7f;  // funct7 in bits 31..25
 
     cpu->regs[0] = 0;  // x0 hardwired to 0 at each cycle
+
+    // If cpu get I Type opcode:
+    switch (opcode) {
+    case I_TYPE:
+        switch (funct3) {
+        case ADDI:
+            exec_ADDI(cpu, inst);
+            break;
+        case SLLI:
+            exec_SLLI(cpu, inst);
+            break;
+        case SLTI:
+            exec_SLTI(cpu, inst);
+            break;
+        case SLTIU:
+            exec_SLTIU(cpu, inst);
+            break;
+        case XORI:
+            exec_XORI(cpu, inst);
+            break;
+        case SRI:
+            switch (funct7) {
+            case SRLI:
+                exec_SRLI(cpu, inst);
+                break;
+            case SRAI:
+                exec_SRAI(cpu, inst);
+                break;
+            default:;
+            }
+            break;
+        case ORI:
+            exec_ORI(cpu, inst);
+            break;
+        case ANDI:
+            exec_ANDI(cpu, inst);
+            break;
+        default:;
+        }
+        break;
+
+    default:
+        fprintf(stderr, "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
+                opcode, funct3, funct7);
+        return 0;
+        /*exit(1);*/
+    }
+}
+
+void exec_ADDI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + (int64_t) imm;
+    print_op("addi\n");
+}
+void exec_SLTI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = (cpu->regs[rs1(inst)] < (int64_t) imm) ? 1 : 0;
+    print_op("slti\n");
+}
+void exec_SRAI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = (int32_t) cpu->regs[rs1(inst)] >> imm;
+    print_op("srai\n");
 }
 
 void dump_registers(CPU *cpu) {}
