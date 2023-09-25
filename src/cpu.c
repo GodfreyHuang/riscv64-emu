@@ -10,25 +10,6 @@ void cpu_init(CPU *cpu)
         DRAM_BASE;  // The program counter points to the start of the memory
 }
 
-uint32_t cpu_fetch(CPU *cpu)
-{
-    return bus_load(&(cpu->bus), cpu->pc, 32);
-}
-
-uint64_t cpu_load(CPU *cpu, uint64_t addr, uint64_t size)
-{
-    return bus_load(&(cpu->bus), addr, size);
-}
-
-void cpu_store(CPU *cpu, uint64_t addr, uint64_t size, uint64_t value)
-{
-    bus_store(&(cpu->bus), addr, size, value);
-}
-
-int cpu_execute(CPU *cpu, uint32_t inst) {}
-
-void dump_registers(CPU *cpu) {}
-
 uint64_t rd(uint32_t inst)
 {
     return (inst >> 7) & 0x1f;  // rd in bits 11..7
@@ -87,3 +68,29 @@ uint32_t shamt(uint32_t inst)
     // shamt[4:5] = imm[5:0]
     return (uint32_t) (imm_I(inst) & 0x1f);  // TODO: 0x1f / 0x3f ?
 }
+
+uint32_t cpu_fetch(CPU *cpu)
+{
+    return bus_load(&(cpu->bus), cpu->pc, 32);
+}
+
+uint64_t cpu_load(CPU *cpu, uint64_t addr, uint64_t size)
+{
+    return bus_load(&(cpu->bus), addr, size);
+}
+
+void cpu_store(CPU *cpu, uint64_t addr, uint64_t size, uint64_t value)
+{
+    bus_store(&(cpu->bus), addr, size, value);
+}
+
+int cpu_execute(CPU *cpu, uint32_t inst)
+{
+    int opcode = inst & 0x7f;          // opcode in bits 6..0
+    int funct3 = (inst >> 12) & 0x7;   // funct3 in bits 14..12
+    int funct7 = (inst >> 25) & 0x7f;  // funct7 in bits 31..25
+
+    cpu->regs[0] = 0;  // x0 hardwired to 0 at each cycle
+}
+
+void dump_registers(CPU *cpu) {}
