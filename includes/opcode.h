@@ -7,6 +7,7 @@
 #define JAL 0x6f
 #define JALR 0x67
 
+// B-Type Operation
 #define B_TYPE 0x63
 #define BEQ 0x0
 #define BNE 0x1
@@ -15,6 +16,7 @@
 #define BLTU 0x6
 #define BGEU 0x7
 
+// Load Operation
 #define LOAD 0x03
 #define LB 0x0
 #define LH 0x1
@@ -24,12 +26,14 @@
 #define LHU 0x5
 #define LWU 0x6
 
+// S-Type Operation
 #define S_TYPE 0x23
 #define SB 0x0
 #define SH 0x1
 #define SW 0x2
 #define SD 0x3
 
+// I-Type Operation (32 bits)
 #define I_TYPE 0x13
 #define ADDI 0x0
 #define SLLI 0x1
@@ -42,6 +46,7 @@
 #define ORI 0x6
 #define ANDI 0x7
 
+// R-Type Operation (32 bits)
 #define R_TYPE 0x33
 #define ADDSUB 0x0
 #define ADD 0x00
@@ -58,6 +63,7 @@
 
 #define FENCE 0x0f
 
+// I-Type Operation (64 bits)
 #define I_TYPE_64 0x1b
 #define ADDIW 0x0
 #define SLLIW 0x1
@@ -65,6 +71,7 @@
 #define SRLIW 0x00
 #define SRAIW 0x20
 
+// R-Type Operation (64 bits)
 #define R_TYPE_64 0x3b
 #define ADDSUB 0x0
 #define ADDW 0x00

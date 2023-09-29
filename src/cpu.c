@@ -126,19 +126,19 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     case I_TYPE:
         switch (funct3) {
         case ADDI:
-            exec_ADDI(cpu, inst);
+            exec_ADDI(cpu, inst);  // finish
             break;
         case SLLI:
-            exec_SLLI(cpu, inst);
+            exec_SLLI(cpu, inst);  // finish
             break;
         case SLTI:
-            exec_SLTI(cpu, inst);
+            exec_SLTI(cpu, inst);  // finish
             break;
         case SLTIU:
             exec_SLTIU(cpu, inst);
             break;
         case XORI:
-            exec_XORI(cpu, inst);
+            exec_XORI(cpu, inst);  // finish
             break;
         case SRI:
             switch (funct7) {
@@ -146,16 +146,16 @@ int cpu_execute(CPU *cpu, uint32_t inst)
                 exec_SRLI(cpu, inst);
                 break;
             case SRAI:
-                exec_SRAI(cpu, inst);
+                exec_SRAI(cpu, inst);  // finish
                 break;
             default:;
             }
             break;
         case ORI:
-            exec_ORI(cpu, inst);
+            exec_ORI(cpu, inst);  // finish
             break;
         case ANDI:
-            exec_ANDI(cpu, inst);
+            exec_ANDI(cpu, inst);  // finish
             break;
         default:;
         }
@@ -169,6 +169,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     }
 }
 
+// ADD Operation
 void exec_ADD(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + cpu->regs[rs2(inst)];
@@ -182,6 +183,7 @@ void exec_ADDI(CPU *cpu, uint32_t inst)
     print_op("addi\n");
 }
 
+// SLT Operation
 void exec_SLT(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] =
@@ -196,6 +198,7 @@ void exec_SLTI(CPU *cpu, uint32_t inst)
     print_op("slti\n");
 }
 
+// SRA Operation
 void exec_SRA(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] =
@@ -208,6 +211,62 @@ void exec_SRAI(CPU *cpu, uint32_t inst)
     uint64_t imm = imm_I(inst);
     cpu->regs[rd(inst)] = (int32_t) cpu->regs[rs1(inst)] >> imm;
     print_op("srai\n");
+}
+
+// OR Operation
+void exec_OR(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] | cpu->regs[rs2(inst)];
+    print_op("or\n");
+}
+
+void exec_ORI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] | imm;
+    print_op("ori\n");
+}
+
+// AND Operation
+void exec_AND(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] & cpu->regs[rs2(inst)];
+    print_op("and\n");
+}
+
+void exec_ANDI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] & imm;
+    print_op("andi\n");
+}
+
+// XOR Operation
+void exec_XOR(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] ^ cpu->regs[rs2(inst)];
+    print_op("xor\n");
+}
+
+void exec_XORI(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] ^ imm;
+    print_op("xori\n");
+}
+
+// Shift Left Logical Operation
+void exec_SLL(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)]
+                          << (int64_t) cpu->regs[rs2(inst)];
+    print_op("sll\n");
+}
+
+void exec_SLLI(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] << shamt(inst);
+    print_op("slli\n");
 }
 
 void dump_registers(CPU *cpu) {}
