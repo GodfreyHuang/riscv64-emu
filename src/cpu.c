@@ -44,9 +44,17 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     switch (opcode) {
     case R_TYPE:
         switch (funct3) {
-        case ADD:
-            exec_ADD(cpu, inst);  // finish
-            break;
+        case ADDSUB:
+            switch (funct7) {
+            case ADD:
+                exec_ADD(cpu, inst);  // finish
+                break;
+            case SUB:
+                exec_ADD(cpu, inst);  // finish
+                break;
+            default:
+                break;
+            }
         case SLL:
             exec_SLL(cpu, inst);  // finish
             break;
@@ -54,7 +62,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             exec_SLT(cpu, inst);  // finish
             break;
         case SLTU:
-            exec_SLTU(cpu, inst);
+            exec_SLTU(cpu, inst);  // finish
             break;
         case XOR:
             exec_XOR(cpu, inst);  // finish
@@ -76,7 +84,11 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         case AND:
             exec_AND(cpu, inst);  // finish
             break;
-        default:;
+        default:
+            fprintf(stderr,
+                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    opcode, funct3, funct7);
+            return 0;
         }
         break;
 
@@ -114,7 +126,11 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         case ANDI:
             exec_ANDI(cpu, inst);  // finish
             break;
-        default:;
+        default:
+            fprintf(stderr,
+                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    opcode, funct3, funct7);
+            return 0;
         }
         break;
 

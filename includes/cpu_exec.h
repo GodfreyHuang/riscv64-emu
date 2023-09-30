@@ -42,8 +42,10 @@ void exec_SLTI(CPU *cpu, uint32_t inst)
     print_op("slti\n");
 }
 
+// SLT in unsigned
 void exec_SLTU(CPU *cpu, uint32_t inst)
 {
+    cpu->regs[rd(inst)] = (cpu->regs[rs1(inst)] < cpu->regs[rs2(inst)]) ? 1 : 0;
     print_op("sltu\n");
 }
 
