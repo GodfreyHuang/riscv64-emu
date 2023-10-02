@@ -134,6 +134,51 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         }
         break;
 
+    case S_TYPE:
+        switch (funct3) {
+        case SB:
+            exec_SB(cpu, inst);  // finish
+            break;
+        case SH:
+            exec_SH(cpu, inst);  // finish
+            break;
+        case SW:
+            exec_SW(cpu, inst);  // finish
+            break;
+        case SD:
+            exec_SD(cpu, inst);  // finish
+            break;
+        default:;
+        }
+        break;
+
+    case LOAD:
+        switch (funct3) {
+        case LB:
+            exec_LB(cpu, inst);
+            break;
+        case LH:
+            exec_LH(cpu, inst);
+            break;
+        case LW:
+            exec_LW(cpu, inst);
+            break;
+        case LD:
+            exec_LD(cpu, inst);
+            break;
+        case LBU:
+            exec_LBU(cpu, inst);
+            break;
+        case LHU:
+            exec_LHU(cpu, inst);
+            break;
+        case LWU:
+            exec_LWU(cpu, inst);\
+            break;
+        default:;
+        }
+        break;
+
     default:
         fprintf(stderr, "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
                 opcode, funct3, funct7);

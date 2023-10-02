@@ -140,3 +140,72 @@ void exec_SRLI(CPU *cpu, uint32_t inst)
     cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] >> shamt(inst);
     print_op("srli\n");
 }
+
+// Store Operation: Store Byte
+// M[R[rs1] + imm](7:0) = R[rs2](7:0)
+void exec_SB(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);  // Get immediate in the inst
+    uint64_t addr =
+        cpu->regs[rs1(inst)] +
+        (int64_t) imm;  // Get the address which rs1 store and add the imm value
+    cpu_store(cpu, addr, 8,
+              cpu->regs[rs2(inst)]);  // Store the value from rs2 into the
+                                      // address. Using 8 bits because the
+                                      // function is size of data is a byte
+    print_op("sb\n");
+}
+
+// Store Operation: Store Halfword
+// M[R[rs1] + imm](15:0) = R[rs2](15:0)
+void exec_SH(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu_store(cpu, addr, 16, cpu->regs[rs2(inst)]);
+    print_op("sh\n");
+}
+
+// Store Operation: Store Word
+// M[R[rs1] + imm](31:0) = R[rs2](31:0)
+void exec_SW(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu_store(cpu, addr, 32, cpu->regs[rs2(inst)]);
+    print_op("sw\n");
+}
+
+// Store Operation: Store Doubleword
+// M[R[rs1] + imm](63:0) = R[rs2](63:0)
+void exec_SD(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu_store(cpu, addr, 64, cpu->regs[rs2(inst)]);
+    print_op("sd\n");
+}
+
+void exec_LB(CPU *cpu, uint32_t inst)
+{
+
+    print_op("lb\n");
+}
+
+void exec_LH(CPU *cpu, uint32_t inst)
+{
+
+    print_op("lh\n");
+}
+
+void exec_LW(CPU *cpu, uint32_t inst)
+{
+
+    print_op("lw\n");
+}
+
+void exec_LD(CPU *cpu, uint32_t inst)
+{
+
+    print_op("ld\n");
+}
