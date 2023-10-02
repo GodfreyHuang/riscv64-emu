@@ -186,6 +186,7 @@ void exec_SD(CPU *cpu, uint32_t inst)
     print_op("sd\n");
 }
 
+// Load Operation
 void exec_LB(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_S(inst);
@@ -218,6 +219,7 @@ void exec_LD(CPU *cpu, uint32_t inst)
     print_op("ld\n");
 }
 
+// unsigned LB
 void exec_LBU(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_S(inst);
@@ -226,6 +228,7 @@ void exec_LBU(CPU *cpu, uint32_t inst)
     print_op("lb\n");
 }
 
+// unsigned LH
 void exec_LHU(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_S(inst);
@@ -240,4 +243,35 @@ void exec_LWU(CPU *cpu, uint32_t inst)
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
     cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 32);
     print_op("lw\n");
+}
+
+// B-Type Operation
+void exec_BEQ(CPU *cpu, uint32_t inst)
+{
+
+}
+
+void exec_BNE(CPU *cpu, uint32_t inst)
+{
+    
+}
+
+void exec_BLT(CPU *cpu, uint32_t inst)
+{
+    
+}
+
+void exec_BGE(CPU *cpu, uint32_t inst)
+{
+    
+}
+
+void exec_BLTU(CPU *cpu, uint32_t inst)
+{
+    
+}
+
+void exec_BGEU(CPU *cpu, uint32_t inst)
+{
+    
 }
