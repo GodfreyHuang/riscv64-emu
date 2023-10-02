@@ -188,24 +188,56 @@ void exec_SD(CPU *cpu, uint32_t inst)
 
 void exec_LB(CPU *cpu, uint32_t inst)
 {
-
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = (int64_t) (int8_t) cpu_load(cpu, addr, 8);
     print_op("lb\n");
 }
 
 void exec_LH(CPU *cpu, uint32_t inst)
 {
-
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = (int64_t) (int16_t) cpu_load(cpu, addr, 16);
     print_op("lh\n");
 }
 
 void exec_LW(CPU *cpu, uint32_t inst)
 {
-
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = (int64_t) (int32_t) cpu_load(cpu, addr, 32);
     print_op("lw\n");
 }
 
 void exec_LD(CPU *cpu, uint32_t inst)
 {
-
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = (int64_t) cpu_load(cpu, addr, 64);
     print_op("ld\n");
+}
+
+void exec_LBU(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 8);
+    print_op("lb\n");
+}
+
+void exec_LHU(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 16);
+    print_op("lh\n");
+}
+
+void exec_LWU(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_S(inst);
+    uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 32);
+    print_op("lw\n");
 }

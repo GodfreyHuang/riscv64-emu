@@ -179,6 +179,30 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         }
         break;
 
+    case B_TYPE:
+        switch (funct3) {
+        case BEQ:
+            exec_BEQ(cpu, inst);
+            break;
+        case BNE:
+            exec_BNE(cpu, inst);
+            break;
+        case BLT:
+            exec_BLT(cpu, inst);
+            break;
+        case BGE:
+            exec_BGE(cpu, inst);
+            break;
+        case BLTU:
+            exec_BLTU(cpu, inst);
+            break;
+        case BGEU:
+            exec_BGEU(cpu, inst);
+            break;
+        default:;
+        }
+        break;
+
     default:
         fprintf(stderr, "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
                 opcode, funct3, funct7);
