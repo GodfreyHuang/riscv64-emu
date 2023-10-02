@@ -173,7 +173,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             exec_LHU(cpu, inst);
             break;
         case LWU:
-            exec_LWU(cpu, inst);\
+            exec_LWU(cpu, inst);
             break;
         default:;
         }
