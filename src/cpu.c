@@ -92,6 +92,50 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         }
         break;
 
+    case R_TYPE_64:
+        switch (funct3) {
+        case ADDSUB:
+            switch (funct7) {
+            case ADDW:
+                exec_ADDW(cpu, inst);
+                break;
+            case SUBW:
+                exec_SUBW(cpu, inst);
+                break;
+            case MULW:
+                exec_MULW(cpu, inst);
+                break;
+            }
+            break;
+        case DIVW:
+            exec_DIVW(cpu, inst);
+            break;
+        case SLLW:
+            exec_SLLW(cpu, inst);
+            break;
+        case SRW:
+            switch (funct7) {
+            case SRLW:
+                exec_SRLW(cpu, inst);
+                break;
+            case SRAW:
+                exec_SRAW(cpu, inst);
+                break;
+            case DIVUW:
+                exec_DIVUW(cpu, inst);
+                break;
+            }
+            break;
+        case REMW:
+            exec_REMW(cpu, inst);
+            break;
+        case REMUW:
+            exec_REMUW(cpu, inst);
+            break;
+        default:;
+        }
+        break;
+
     case I_TYPE:
         switch (funct3) {
         case ADDI:
@@ -134,6 +178,29 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         }
         break;
 
+    case I_TYPE_64:
+        switch (funct3) {
+        case ADDIW:
+            exec_ADDIW(cpu, inst);  // finish
+            break;
+        case SLLIW:
+            exec_SLLIW(cpu, inst);  // finish
+            break;
+        case SRIW:
+            switch (funct7) {
+            case SRLIW:
+                exec_SRLIW(cpu, inst);  // finish
+                break;
+            case SRAIW:
+                exec_SRAIW(cpu, inst);  // finish
+                break;
+            default:;
+            }
+            break;
+        default:;
+        }
+        break;
+
     case S_TYPE:
         switch (funct3) {
         case SB:
@@ -155,25 +222,25 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     case LOAD:
         switch (funct3) {
         case LB:
-            exec_LB(cpu, inst);
+            exec_LB(cpu, inst);  // finish
             break;
         case LH:
-            exec_LH(cpu, inst);
+            exec_LH(cpu, inst);  // finish
             break;
         case LW:
-            exec_LW(cpu, inst);
+            exec_LW(cpu, inst);  // finish
             break;
         case LD:
-            exec_LD(cpu, inst);
+            exec_LD(cpu, inst);  // finish
             break;
         case LBU:
-            exec_LBU(cpu, inst);
+            exec_LBU(cpu, inst);  // finish
             break;
         case LHU:
-            exec_LHU(cpu, inst);
+            exec_LHU(cpu, inst);  // finish
             break;
         case LWU:
-            exec_LWU(cpu, inst);
+            exec_LWU(cpu, inst);  // finish
             break;
         default:;
         }
@@ -182,22 +249,22 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     case B_TYPE:
         switch (funct3) {
         case BEQ:
-            exec_BEQ(cpu, inst);
+            exec_BEQ(cpu, inst);  // finish
             break;
         case BNE:
-            exec_BNE(cpu, inst);
+            exec_BNE(cpu, inst);  // finish
             break;
         case BLT:
-            exec_BLT(cpu, inst);
+            exec_BLT(cpu, inst);  // finish
             break;
         case BGE:
-            exec_BGE(cpu, inst);
+            exec_BGE(cpu, inst);  // finish
             break;
         case BLTU:
-            exec_BLTU(cpu, inst);
+            exec_BLTU(cpu, inst);  // finish
             break;
         case BGEU:
-            exec_BGEU(cpu, inst);
+            exec_BGEU(cpu, inst);  // finish
             break;
         default:;
         }

@@ -27,6 +27,13 @@ void exec_ADDI(CPU *cpu, uint32_t inst)
     print_op("addi\n");
 }
 
+void exec_ADDIW(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + (int64_t) imm;
+    print_op("addiw\n");
+}
+
 // SLT Operation
 void exec_SLT(CPU *cpu, uint32_t inst)
 {
@@ -69,6 +76,15 @@ void exec_SRAI(CPU *cpu, uint32_t inst)
     uint64_t imm = imm_I(inst);
     cpu->regs[rd(inst)] = (int32_t) cpu->regs[rs1(inst)] >> imm;
     print_op("srai\n");
+}
+
+void exec_SRAIW(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    cpu->regs[rd(inst)] =
+        (int64_t) (int32_t) (cpu->regs[rs1(inst)] >>
+                             (uint64_t) (int64_t) (int32_t) imm);
+    print_op("sraiw\n");
 }
 
 // OR Operation
@@ -127,17 +143,30 @@ void exec_SLLI(CPU *cpu, uint32_t inst)
     print_op("slli\n");
 }
 
+void exec_SLLIW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] =
+        (int64_t) (int32_t) (cpu->regs[rs1(inst)] << shamt(inst));
+    print_op("slliw\n");
+}
+
 // Shift Right Logical Operation
 void exec_SRL(CPU *cpu, uint32_t inst)
 {
-    cpu->regs[rd(inst)] =
-        cpu->regs[rs1(inst)] >> (int64_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] >> cpu->regs[rs2(inst)];
     print_op("srl\n");
 }
 
 void exec_SRLI(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] >> shamt(inst);
+    print_op("srli\n");
+}
+
+void exec_SRLIW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] =
+        (int64_t) (int32_t) cpu->regs[rs1(inst)] >> shamt(inst);
     print_op("srli\n");
 }
 
@@ -246,32 +275,51 @@ void exec_LWU(CPU *cpu, uint32_t inst)
 }
 
 // B-Type Operation
+// The Operation of Branch
 void exec_BEQ(CPU *cpu, uint32_t inst)
 {
-
+    uint64_t imm = imm_S(inst);
+    if ((int64_t) cpu->regs[rs1(inst)] == (int64_t) cpu->regs[rs2(inst)])
+        cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("beq\n");
 }
 
 void exec_BNE(CPU *cpu, uint32_t inst)
 {
-    
+    uint64_t imm = imm_S(inst);
+    if ((int64_t) cpu->regs[rs1(inst)] != (int64_t) cpu->regs[rs2(inst)])
+        cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("bne\n");
 }
 
 void exec_BLT(CPU *cpu, uint32_t inst)
 {
-    
+    uint64_t imm = imm_S(inst);
+    if ((int64_t) cpu->regs[rs1(inst)] < (int64_t) cpu->regs[rs2(inst)])
+        cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("blt\n");
 }
 
 void exec_BGE(CPU *cpu, uint32_t inst)
 {
-    
+    uint64_t imm = imm_S(inst);
+    if ((int64_t) cpu->regs[rs1(inst)] >= (int64_t) cpu->regs[rs2(inst)])
+        cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("bge\n");
 }
 
 void exec_BLTU(CPU *cpu, uint32_t inst)
 {
-    
+    uint64_t imm = imm_S(inst);
+    if (cpu->regs[rs1(inst)] < cpu->regs[rs2(inst)])
+        cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("bltu\n");
 }
 
 void exec_BGEU(CPU *cpu, uint32_t inst)
 {
-    
+    uint64_t imm = imm_S(inst);
+    if (cpu->regs[rs1(inst)] >= cpu->regs[rs2(inst)])
+        cpu->pc = (int64_t) cpu->pc + (int64_t) imm - 4;
+    print_op("bge\n");
 }
