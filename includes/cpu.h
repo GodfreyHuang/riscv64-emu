@@ -4,7 +4,8 @@
 typedef struct cpu {
     uint64_t regs[32];  // 32 64-bit registers (x0-x31)
     uint64_t pc;        // 64-bit program counter
-    BUS bus;            // CPU connected to BUS
+    uint64_t csr[4069];
+    BUS bus;  // CPU connected to BUS
 } CPU;
 
 void cpu_init(CPU *cpu);

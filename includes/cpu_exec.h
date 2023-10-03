@@ -27,11 +27,62 @@ void exec_ADDI(CPU *cpu, uint32_t inst)
     print_op("addi\n");
 }
 
+void exec_ADDW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] +
+                                               (int64_t) cpu->regs[rs2(inst)]);
+    print_op("addw\n");
+}
+
 void exec_ADDIW(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_I(inst);
     cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + (int64_t) imm;
     print_op("addiw\n");
+}
+
+// SUB Operation
+void exec_SUBW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] -
+                                               (int64_t) cpu->regs[rs2(inst)]);
+    print_op("subw\n");
+}
+
+// MUL Operation
+void exec_MULW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] *
+                                               (int64_t) cpu->regs[rs2(inst)]);
+    print_op("mulw\n");
+}
+
+// DIV Operation
+void exec_DIVW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] /
+                                               (int64_t) cpu->regs[rs2(inst)]);
+    print_op("divw\n");
+}
+
+void exec_DIVUW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] / (int64_t) cpu->regs[rs2(inst)];
+    print_op("divuw\n");
+}
+
+// Remainder Operation
+void exec_REMW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] %
+                                               (int64_t) cpu->regs[rs2(inst)]);
+    print_op("remw\n");
+}
+
+void exec_REMUW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] % (int64_t) cpu->regs[rs2(inst)];
+    print_op("remuw\n");
 }
 
 // SLT Operation
@@ -76,6 +127,14 @@ void exec_SRAI(CPU *cpu, uint32_t inst)
     uint64_t imm = imm_I(inst);
     cpu->regs[rd(inst)] = (int32_t) cpu->regs[rs1(inst)] >> imm;
     print_op("srai\n");
+}
+
+void exec_SRAW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = (int64_t) (int32_t) (cpu->regs[rs1(inst)] >>
+                                               (uint64_t) (int64_t) (int32_t)
+                                                   cpu->regs[rs2(inst)]);
+    print_op("sraw\n");
 }
 
 void exec_SRAIW(CPU *cpu, uint32_t inst)
@@ -143,6 +202,13 @@ void exec_SLLI(CPU *cpu, uint32_t inst)
     print_op("slli\n");
 }
 
+void exec_SLLW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] =
+        (int64_t) (int32_t) (cpu->regs[rs1(inst)] << cpu->regs[rs2(inst)]);
+    print_op("sllw\n");
+}
+
 void exec_SLLIW(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] =
@@ -161,6 +227,13 @@ void exec_SRLI(CPU *cpu, uint32_t inst)
 {
     cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] >> shamt(inst);
     print_op("srli\n");
+}
+
+void exec_SRLW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] =
+        (int64_t) (int32_t) (cpu->regs[rs1(inst)] >> cpu->regs[rs2(inst)]);
+    print_op("srlw\n");
 }
 
 void exec_SRLIW(CPU *cpu, uint32_t inst)
@@ -322,4 +395,181 @@ void exec_BGEU(CPU *cpu, uint32_t inst)
     if (cpu->regs[rs1(inst)] >= cpu->regs[rs2(inst)])
         cpu->pc = (int64_t) cpu->pc + (int64_t) imm - 4;
     print_op("bge\n");
+}
+
+//=====================================================================================
+//   Instruction Execution Functions
+//=====================================================================================
+
+// Load Upper Immediate
+void exec_LUI(CPU *cpu, uint32_t inst)
+{
+    // LUI places upper 20 bits of U-immediate value to rd
+    cpu->regs[rd(inst)] = (uint64_t) (int64_t) (int32_t) (inst & 0xfffff000);
+    print_op("lui\n");
+}
+
+void exec_AUIPC(CPU *cpu, uint32_t inst)
+{
+    // AUIPC forms a 32-bit offset from the 20 upper bits
+    // of the U-immediate
+    uint64_t imm = imm_U(inst);
+    cpu->regs[rd(inst)] = ((int64_t) cpu->pc + (int64_t) imm) - 4;
+    print_op("auipc\n");
+}
+
+void exec_JAL(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_J(inst);
+    cpu->regs[rd(inst)] = cpu->pc;
+    /*print_op("JAL-> rd:%ld, pc:%lx\n", rd(inst), cpu->pc);*/
+    cpu->pc = cpu->pc + (int64_t) imm - 4;
+    print_op("jal\n");
+    if (ADDR_MISALIGNED(cpu->pc)) {
+        fprintf(stderr, "JAL pc address misalligned");
+        exit(0);
+    }
+}
+
+void exec_JALR(CPU *cpu, uint32_t inst)
+{
+    uint64_t imm = imm_I(inst);
+    uint64_t tmp = cpu->pc;
+    cpu->pc = (cpu->regs[rs1(inst)] + (int64_t) imm) & 0xfffffffe;
+    cpu->regs[rd(inst)] = tmp;
+    /*print_op("NEXT -> %#lx, imm:%#lx\n", cpu->pc, imm);*/
+    print_op("jalr\n");
+    if (ADDR_MISALIGNED(cpu->pc)) {
+        fprintf(stderr, "JAL pc address misalligned");
+        exit(0);
+    }
+}
+
+void exec_ECALLBREAK(CPU *cpu, uint32_t inst)
+{
+    if (imm_I(inst) == 0x0)
+        exec_ECALL(cpu, inst);
+    if (imm_I(inst) == 0x1)
+        exec_EBREAK(cpu, inst);
+    print_op("ecallbreak\n");
+}
+
+// CSR instructions
+void exec_CSRRW(CPU *cpu, uint32_t inst)
+{
+    cpu->regs[rd(inst)] = csr_read(cpu, csr(inst));
+    csr_write(cpu, csr(inst), cpu->regs[rs1(inst)]);
+    print_op("csrrw\n");
+}
+void exec_CSRRS(CPU *cpu, uint32_t inst)
+{
+    csr_write(cpu, csr(inst), cpu->csr[csr(inst)] | cpu->regs[rs1(inst)]);
+    print_op("csrrs\n");
+}
+void exec_CSRRC(CPU *cpu, uint32_t inst)
+{
+    csr_write(cpu, csr(inst), cpu->csr[csr(inst)] & !(cpu->regs[rs1(inst)]));
+    print_op("csrrc\n");
+}
+void exec_CSRRWI(CPU *cpu, uint32_t inst)
+{
+    csr_write(cpu, csr(inst), rs1(inst));
+    print_op("csrrwi\n");
+}
+void exec_CSRRSI(CPU *cpu, uint32_t inst)
+{
+    csr_write(cpu, csr(inst), cpu->csr[csr(inst)] | rs1(inst));
+    print_op("csrrsi\n");
+}
+void exec_CSRRCI(CPU *cpu, uint32_t inst)
+{
+    csr_write(cpu, csr(inst), cpu->csr[csr(inst)] & !rs1(inst));
+    print_op("csrrci\n");
+}
+
+// AMO_W
+void exec_LR_W(CPU *cpu, uint32_t inst) {}
+void exec_SC_W(CPU *cpu, uint32_t inst) {}
+void exec_AMOSWAP_W(CPU *cpu, uint32_t inst) {}
+void exec_AMOADD_W(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp + (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoadd.w\n");
+}
+void exec_AMOXOR_W(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp ^ (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoxor.w\n");
+}
+void exec_AMOAND_W(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp & (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoand.w\n");
+}
+void exec_AMOOR_W(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp | (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoor.w\n");
+}
+void exec_AMOMIN_W(CPU *cpu, uint32_t inst) {}
+void exec_AMOMAX_W(CPU *cpu, uint32_t inst) {}
+void exec_AMOMINU_W(CPU *cpu, uint32_t inst) {}
+void exec_AMOMAXU_W(CPU *cpu, uint32_t inst) {}
+
+// AMO_D TODO
+void exec_LR_D(CPU *cpu, uint32_t inst) {}
+void exec_SC_D(CPU *cpu, uint32_t inst) {}
+void exec_AMOSWAP_D(CPU *cpu, uint32_t inst) {}
+void exec_AMOADD_D(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp + (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoadd.w\n");
+}
+void exec_AMOXOR_D(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp ^ (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoxor.w\n");
+}
+void exec_AMOAND_D(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp & (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoand.w\n");
+}
+void exec_AMOOR_D(CPU *cpu, uint32_t inst)
+{
+    uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
+    uint32_t res = tmp | (uint32_t) cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] = tmp;
+    cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
+    print_op("amoor.w\n");
+}
+void exec_AMOMIN_D(CPU *cpu, uint32_t inst) {}
+void exec_AMOMAX_D(CPU *cpu, uint32_t inst) {}
+void exec_AMOMINU_D(CPU *cpu, uint32_t inst) {}
+void exec_AMOMAXU_D(CPU *cpu, uint32_t inst) {}
+
+void exec_FENCE(CPU *cpu, uint32_t inst)
+{
+    print_op("fence\n");
 }

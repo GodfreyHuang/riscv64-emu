@@ -97,40 +97,40 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         case ADDSUB:
             switch (funct7) {
             case ADDW:
-                exec_ADDW(cpu, inst);
+                exec_ADDW(cpu, inst);  // finish
                 break;
             case SUBW:
-                exec_SUBW(cpu, inst);
+                exec_SUBW(cpu, inst);  // finish
                 break;
             case MULW:
-                exec_MULW(cpu, inst);
+                exec_MULW(cpu, inst);  // finish
                 break;
             }
             break;
         case DIVW:
-            exec_DIVW(cpu, inst);
+            exec_DIVW(cpu, inst);  // finish
             break;
         case SLLW:
-            exec_SLLW(cpu, inst);
+            exec_SLLW(cpu, inst);  // finish
             break;
         case SRW:
             switch (funct7) {
             case SRLW:
-                exec_SRLW(cpu, inst);
+                exec_SRLW(cpu, inst);  // finish
                 break;
             case SRAW:
-                exec_SRAW(cpu, inst);
+                exec_SRAW(cpu, inst);  // finish
                 break;
             case DIVUW:
-                exec_DIVUW(cpu, inst);
+                exec_DIVUW(cpu, inst);  // finish
                 break;
             }
             break;
         case REMW:
-            exec_REMW(cpu, inst);
+            exec_REMW(cpu, inst);  // finish
             break;
         case REMUW:
-            exec_REMUW(cpu, inst);
+            exec_REMUW(cpu, inst);  // finish
             break;
         default:;
         }
@@ -269,6 +269,101 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         default:;
         }
         break;
+
+    case LUI:
+        exec_LUI(cpu, inst);
+        break;
+    case AUIPC:
+        exec_AUIPC(cpu, inst);
+        break;
+
+    case JAL:
+        exec_JAL(cpu, inst);
+        break;
+    case JALR:
+        exec_JALR(cpu, inst);
+        break;
+
+    case CSR:
+        switch (funct3) {
+        case ECALLBREAK:
+            exec_ECALLBREAK(cpu, inst);
+            break;
+        case CSRRW:
+            exec_CSRRW(cpu, inst);
+            break;
+        case CSRRS:
+            exec_CSRRS(cpu, inst);
+            break;
+        case CSRRC:
+            exec_CSRRC(cpu, inst);
+            break;
+        case CSRRWI:
+            exec_CSRRWI(cpu, inst);
+            break;
+        case CSRRSI:
+            exec_CSRRSI(cpu, inst);
+            break;
+        case CSRRCI:
+            exec_CSRRCI(cpu, inst);
+            break;
+        default:
+            fprintf(stderr,
+                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    opcode, funct3, funct7);
+            return 0;
+        }
+        break;
+
+    case AMO_W:
+        switch (funct7 >> 2) {  // since, funct[1:0] = aq, rl
+        case LR_W:
+            exec_LR_W(cpu, inst);
+            break;
+        case SC_W:
+            exec_SC_W(cpu, inst);
+            break;
+        case AMOSWAP_W:
+            exec_AMOSWAP_W(cpu, inst);
+            break;
+        case AMOADD_W:
+            exec_AMOADD_W(cpu, inst);
+            break;
+        case AMOXOR_W:
+            exec_AMOXOR_W(cpu, inst);
+            break;
+        case AMOAND_W:
+            exec_AMOAND_W(cpu, inst);
+            break;
+        case AMOOR_W:
+            exec_AMOOR_W(cpu, inst);
+            break;
+        case AMOMIN_W:
+            exec_AMOMIN_W(cpu, inst);
+            break;
+        case AMOMAX_W:
+            exec_AMOMAX_W(cpu, inst);
+            break;
+        case AMOMINU_W:
+            exec_AMOMINU_W(cpu, inst);
+            break;
+        case AMOMAXU_W:
+            exec_AMOMAXU_W(cpu, inst);
+            break;
+        default:
+            fprintf(stderr,
+                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    opcode, funct3, funct7);
+            return 0;
+        }
+        break;
+
+    case FENCE:
+        exec_FENCE(cpu, inst);
+        break;
+
+    case 0x00:
+        return 0;
 
     default:
         fprintf(stderr, "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
