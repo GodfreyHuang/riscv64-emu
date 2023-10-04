@@ -1,5 +1,3 @@
-#include "cpu.h"
-
 // ---------- Instruction Decode ----------
 // the address of destination register
 uint64_t rd(uint32_t inst)

@@ -1,3 +1,5 @@
+#ifndef DRAM_H
+#define DRAM_H
 // DRAM
 // The setting of DRAM using in RISC-V emulator
 #include <stdint.h>
@@ -15,3 +17,5 @@ uint64_t dram_load(DRAM *dram, uint64_t addr, uint64_t size);
 
 // store the value into the dram
 void dram_store(DRAM *dram, uint64_t addr, uint64_t size, uint64_t value);
+
+#endif

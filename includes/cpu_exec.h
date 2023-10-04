@@ -445,6 +445,9 @@ void exec_JALR(CPU *cpu, uint32_t inst)
     }
 }
 
+void exec_ECALL(CPU *cpu, uint32_t inst) {}
+void exec_EBREAK(CPU *cpu, uint32_t inst) {}
+
 void exec_ECALLBREAK(CPU *cpu, uint32_t inst)
 {
     if (imm_I(inst) == 0x0)
