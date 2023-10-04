@@ -461,26 +461,31 @@ void exec_CSRRW(CPU *cpu, uint32_t inst)
     csr_write(cpu, csr(inst), cpu->regs[rs1(inst)]);
     print_op("csrrw\n");
 }
+
 void exec_CSRRS(CPU *cpu, uint32_t inst)
 {
     csr_write(cpu, csr(inst), cpu->csr[csr(inst)] | cpu->regs[rs1(inst)]);
     print_op("csrrs\n");
 }
+
 void exec_CSRRC(CPU *cpu, uint32_t inst)
 {
     csr_write(cpu, csr(inst), cpu->csr[csr(inst)] & !(cpu->regs[rs1(inst)]));
     print_op("csrrc\n");
 }
+
 void exec_CSRRWI(CPU *cpu, uint32_t inst)
 {
     csr_write(cpu, csr(inst), rs1(inst));
     print_op("csrrwi\n");
 }
+
 void exec_CSRRSI(CPU *cpu, uint32_t inst)
 {
     csr_write(cpu, csr(inst), cpu->csr[csr(inst)] | rs1(inst));
     print_op("csrrsi\n");
 }
+
 void exec_CSRRCI(CPU *cpu, uint32_t inst)
 {
     csr_write(cpu, csr(inst), cpu->csr[csr(inst)] & !rs1(inst));
@@ -491,6 +496,7 @@ void exec_CSRRCI(CPU *cpu, uint32_t inst)
 void exec_LR_W(CPU *cpu, uint32_t inst) {}
 void exec_SC_W(CPU *cpu, uint32_t inst) {}
 void exec_AMOSWAP_W(CPU *cpu, uint32_t inst) {}
+
 void exec_AMOADD_W(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -499,6 +505,7 @@ void exec_AMOADD_W(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoadd.w\n");
 }
+
 void exec_AMOXOR_W(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -507,6 +514,7 @@ void exec_AMOXOR_W(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoxor.w\n");
 }
+
 void exec_AMOAND_W(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -515,6 +523,7 @@ void exec_AMOAND_W(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoand.w\n");
 }
+
 void exec_AMOOR_W(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -523,6 +532,7 @@ void exec_AMOOR_W(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoor.w\n");
 }
+
 void exec_AMOMIN_W(CPU *cpu, uint32_t inst) {}
 void exec_AMOMAX_W(CPU *cpu, uint32_t inst) {}
 void exec_AMOMINU_W(CPU *cpu, uint32_t inst) {}
@@ -532,6 +542,7 @@ void exec_AMOMAXU_W(CPU *cpu, uint32_t inst) {}
 void exec_LR_D(CPU *cpu, uint32_t inst) {}
 void exec_SC_D(CPU *cpu, uint32_t inst) {}
 void exec_AMOSWAP_D(CPU *cpu, uint32_t inst) {}
+
 void exec_AMOADD_D(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -540,6 +551,7 @@ void exec_AMOADD_D(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoadd.w\n");
 }
+
 void exec_AMOXOR_D(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -548,6 +560,7 @@ void exec_AMOXOR_D(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoxor.w\n");
 }
+
 void exec_AMOAND_D(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -556,6 +569,7 @@ void exec_AMOAND_D(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoand.w\n");
 }
+
 void exec_AMOOR_D(CPU *cpu, uint32_t inst)
 {
     uint32_t tmp = cpu_load(cpu, cpu->regs[rs1(inst)], 32);
@@ -564,6 +578,7 @@ void exec_AMOOR_D(CPU *cpu, uint32_t inst)
     cpu_store(cpu, cpu->regs[rs1(inst)], 32, res);
     print_op("amoor.w\n");
 }
+
 void exec_AMOMIN_D(CPU *cpu, uint32_t inst) {}
 void exec_AMOMAX_D(CPU *cpu, uint32_t inst) {}
 void exec_AMOMINU_D(CPU *cpu, uint32_t inst) {}

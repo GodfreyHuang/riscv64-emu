@@ -271,17 +271,17 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         break;
 
     case LUI:
-        exec_LUI(cpu, inst);
+        exec_LUI(cpu, inst);  // finish
         break;
     case AUIPC:
-        exec_AUIPC(cpu, inst);
+        exec_AUIPC(cpu, inst);  // finish
         break;
 
     case JAL:
-        exec_JAL(cpu, inst);
+        exec_JAL(cpu, inst);  // finish
         break;
     case JALR:
-        exec_JALR(cpu, inst);
+        exec_JALR(cpu, inst);  // finish
         break;
 
     case CSR:
@@ -373,4 +373,19 @@ int cpu_execute(CPU *cpu, uint32_t inst)
     }
 }
 
-void dump_registers(CPU *cpu) {}
+void dump_registers(CPU *cpu)
+{
+    char *abi[] = {
+        // Application Binary Interface registers
+        "zero", "ra", "sp", "gp", "tp",  "t0",  "t1", "t2", "s0", "s1", "a0",
+        "a1",   "a2", "a3", "a4", "a5",  "a6",  "a7", "s2", "s3", "s4", "s5",
+        "s6",   "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6",
+    };
+
+    for (int i = 0; i < 8; i++) {
+        printf("   %4s: %#-13.2lx  ", abi[i], cpu->regs[i]);
+        printf("   %2s: %#-13.2lx  ", abi[i + 8], cpu->regs[i + 8]);
+        printf("   %2s: %#-13.2lx  ", abi[i + 16], cpu->regs[i + 16]);
+        printf("   %3s: %#-13.2lx\n", abi[i + 24], cpu->regs[i + 24]);
+    }
+}
