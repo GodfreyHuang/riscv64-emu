@@ -312,7 +312,9 @@ void exec_LW(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_S(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = (int64_t) (int32_t) cpu_load(cpu, addr, 32);
+    cpu->regs[rd(inst)] = (int64_t)(int32_t) cpu_load(cpu, addr, 32);
+    //uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
+    //cpu->regs[rs1(inst)] = (int64_t) (int32_t) cpu_load(cpu, addr, 32);
     print_op("lw\n");
 }
 
@@ -364,7 +366,9 @@ void exec_BNE(CPU *cpu, uint32_t inst)
 {
     uint64_t imm = imm_S(inst);
     if ((int64_t) cpu->regs[rs1(inst)] != (int64_t) cpu->regs[rs2(inst)])
-        cpu->pc = cpu->pc + (int64_t) imm - 4;
+        cpu->pc = (cpu->pc + (int64_t) imm - 4);
+    //if ((int64_t) cpu->regs[rs1(inst)] != (int64_t) cpu->regs[rs2(inst)])
+    //    cpu->pc = cpu->pc + (int64_t) imm - 4;
     print_op("bne\n");
 }
 
