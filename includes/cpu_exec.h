@@ -1,4 +1,5 @@
 #include "cpu.h"
+#include "csr.h"
 #include "dram.h"
 #include "isa_decode.h"
 #include "opcode.h"
@@ -395,6 +396,12 @@ void exec_BGEU(CPU *cpu, uint32_t inst)
     if (cpu->regs[rs1(inst)] >= cpu->regs[rs2(inst)])
         cpu->pc = (int64_t) cpu->pc + (int64_t) imm - 4;
     print_op("bge\n");
+}
+
+uint64_t csr(uint32_t inst)
+{
+    // csr[11:0] = inst[31:20]
+    return ((inst & 0xfff00000) >> 20);
 }
 
 //=====================================================================================
