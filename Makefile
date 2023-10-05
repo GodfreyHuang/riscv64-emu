@@ -1,7 +1,7 @@
 CC = gcc
 
 APP_NAME = main
-APP_DIR = ./bin/*
+APP_DIR = ./bin/
 
 INCLUDES_POS = -I ./includes
 SRC_POS = $(shell find ./src -name '*.c')
@@ -10,7 +10,7 @@ SRC_FILES += $(APP_SRC_FILES)
 SRC_FILES += $(SRC_POS)
 
 make:
-	$(CC) $(SRC_FILES) -o $(APP_DIR)$(APP_NAME) $(INCLUDES_POS)
+	$(CC) $(SRC_FILES) -o $(APP_DIR)$(APP_NAME) -Og -g $(INCLUDES_POS)
 
 clean:
-	rm -f $(APP_DIR)
+	rm -f $(APP_DIR)$(APP_NAME)

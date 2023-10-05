@@ -86,7 +86,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             break;
         default:
             fprintf(stderr,
-                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    "[-]R_TYPE ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
                     opcode, funct3, funct7);
             return 0;
         }
@@ -172,7 +172,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             break;
         default:
             fprintf(stderr,
-                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    "[-]I_TYPE ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
                     opcode, funct3, funct7);
             return 0;
         }
@@ -309,7 +309,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             break;
         default:
             fprintf(stderr,
-                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    "[-]CSR ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
                     opcode, funct3, funct7);
             return 0;
         }
@@ -352,7 +352,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
             break;
         default:
             fprintf(stderr,
-                    "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
+                    "[-]AMO_W ERROR-> opcode:0x%x, funct3:0x%x, funct7:0x%x\n",
                     opcode, funct3, funct7);
             return 0;
         }
@@ -366,7 +366,7 @@ int cpu_execute(CPU *cpu, uint32_t inst)
         return 0;
 
     default:
-        fprintf(stderr, "[-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
+        fprintf(stderr, "Undefine Opcode [-] ERROR-> opcode:0x%x, funct3:0x%x, funct3:0x%x\n",
                 opcode, funct3, funct7);
         return 0;
         /*exit(1);*/

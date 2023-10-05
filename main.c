@@ -42,15 +42,23 @@ void read_file(CPU *cpu, char *filename)
     free(buffer);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char* argv[])
 {
+    if (argc != 2) {
+        printf("Usage: rvemu <filename>\n");
+        exit(1);
+    }
+
     // Initialize cpu, registers and program counter
     CPU cpu;
     cpu_init(&cpu);
+    printf("CPU init complete!\n");
     // Read input file
+    printf("Reading input file!\n");
     read_file(&cpu, argv[1]);
-
+    
     // cpu loop
+    printf("\nCPU execute!\n");
     while (1) {
         // fetch
         uint32_t inst = cpu_fetch(&cpu);

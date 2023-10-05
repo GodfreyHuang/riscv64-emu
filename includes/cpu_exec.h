@@ -17,7 +17,9 @@ void print_op(char *s)
 // ADD Operation
 void exec_ADD(CPU *cpu, uint32_t inst)
 {
-    cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + cpu->regs[rs2(inst)];
+    //cpu->regs[rd(inst)] = cpu->regs[rs1(inst)] + cpu->regs[rs2(inst)];
+    cpu->regs[rd(inst)] =
+        (uint64_t) ((int64_t)cpu->regs[rs1(inst)] + (int64_t)cpu->regs[rs2(inst)]);
     print_op("add\n");
 }
 
