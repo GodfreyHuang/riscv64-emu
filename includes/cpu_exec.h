@@ -294,23 +294,23 @@ void exec_SD(CPU *cpu, uint32_t inst)
 // Load Operation
 void exec_LB(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = (int64_t) (int8_t) cpu_load(cpu, addr, 8);
+    cpu->regs[rd(inst)] = (int64_t) (int8_t) cpu_load(cpu, addr, 8);
     print_op("lb\n");
 }
 
 void exec_LH(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = (int64_t) (int16_t) cpu_load(cpu, addr, 16);
+    cpu->regs[rd(inst)] = (int64_t) (int16_t) cpu_load(cpu, addr, 16);
     print_op("lh\n");
 }
 
 void exec_LW(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
     cpu->regs[rd(inst)] = (int64_t)(int32_t) cpu_load(cpu, addr, 32);
     //uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
@@ -320,35 +320,35 @@ void exec_LW(CPU *cpu, uint32_t inst)
 
 void exec_LD(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = (int64_t) cpu_load(cpu, addr, 64);
+    cpu->regs[rd(inst)] = (int64_t) cpu_load(cpu, addr, 64);
     print_op("ld\n");
 }
 
 // unsigned LB
 void exec_LBU(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 8);
+    cpu->regs[rd(inst)] = cpu_load(cpu, addr, 8);
     print_op("lb\n");
 }
 
 // unsigned LH
 void exec_LHU(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 16);
+    cpu->regs[rd(inst)] = cpu_load(cpu, addr, 16);
     print_op("lh\n");
 }
 
 void exec_LWU(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_I(inst);
     uint64_t addr = cpu->regs[rs1(inst)] + (int64_t) imm;
-    cpu->regs[rs1(inst)] = cpu_load(cpu, addr, 32);
+    cpu->regs[rd(inst)] = cpu_load(cpu, addr, 32);
     print_op("lw\n");
 }
 
@@ -356,7 +356,7 @@ void exec_LWU(CPU *cpu, uint32_t inst)
 // The Operation of Branch
 void exec_BEQ(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if ((int64_t) cpu->regs[rs1(inst)] == (int64_t) cpu->regs[rs2(inst)])
         cpu->pc = cpu->pc + (int64_t) imm - 4;
     print_op("beq\n");
@@ -364,7 +364,7 @@ void exec_BEQ(CPU *cpu, uint32_t inst)
 
 void exec_BNE(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if ((int64_t) cpu->regs[rs1(inst)] != (int64_t) cpu->regs[rs2(inst)])
         cpu->pc = (cpu->pc + (int64_t) imm - 4);
     //if ((int64_t) cpu->regs[rs1(inst)] != (int64_t) cpu->regs[rs2(inst)])
@@ -374,7 +374,7 @@ void exec_BNE(CPU *cpu, uint32_t inst)
 
 void exec_BLT(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if ((int64_t) cpu->regs[rs1(inst)] < (int64_t) cpu->regs[rs2(inst)])
         cpu->pc = cpu->pc + (int64_t) imm - 4;
     print_op("blt\n");
@@ -382,7 +382,7 @@ void exec_BLT(CPU *cpu, uint32_t inst)
 
 void exec_BGE(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if ((int64_t) cpu->regs[rs1(inst)] >= (int64_t) cpu->regs[rs2(inst)])
         cpu->pc = cpu->pc + (int64_t) imm - 4;
     print_op("bge\n");
@@ -390,7 +390,7 @@ void exec_BGE(CPU *cpu, uint32_t inst)
 
 void exec_BLTU(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if (cpu->regs[rs1(inst)] < cpu->regs[rs2(inst)])
         cpu->pc = cpu->pc + (int64_t) imm - 4;
     print_op("bltu\n");
@@ -398,7 +398,7 @@ void exec_BLTU(CPU *cpu, uint32_t inst)
 
 void exec_BGEU(CPU *cpu, uint32_t inst)
 {
-    uint64_t imm = imm_S(inst);
+    uint64_t imm = imm_B(inst);
     if (cpu->regs[rs1(inst)] >= cpu->regs[rs2(inst)])
         cpu->pc = (int64_t) cpu->pc + (int64_t) imm - 4;
     print_op("bge\n");
